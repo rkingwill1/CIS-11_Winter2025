@@ -3,8 +3,7 @@
 
 // Read only data
 .section .rodata
-
-hello: .ascii "Hello World\n"
+    hello: .ascii "Hello World\n"
 
 // Initialized variables
 .section .data

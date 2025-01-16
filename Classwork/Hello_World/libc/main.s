@@ -2,7 +2,7 @@
 
 .section .data //Variable, init
 .section .rodata //Read only
-	//char h[50] = "Hello, World!\n";
+	//char* h = "Hello, World!\n";
 	hello: .asciz "Hello world\n"
 	//since printg needs the format and the parameters I need to store the format
 	format: .asciz "%s"
