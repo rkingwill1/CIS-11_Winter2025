@@ -70,7 +70,7 @@ main:
 
     //Output result
     ldr r0, =outRes
-    //mov r1, r2      //We did this already when we did the calculation
+    //mov r1, r2      //We did this already when we multiplied
     bl printf
 
 
