@@ -22,19 +22,18 @@
 main:
     push {lr}
 
-    bl getLength
+    //Get Length
+    bl getLength //Returns length in r0
+    mov r4, r0 //Save r0(Length) into r4
 
-    
-    ldr r0, =outRes
-    mov r1, r4
+    //Get Width
+    bl getWidth //Returns width into r1
+    mov r0, r4 //Move length to r0 again
 
+    //Caclulate Area 
+    bl getArea //Takes r0 and r1, returns restult into r1
 
-    bl printf
-
-    bl getWidth
-
-    bl getArea
-
+    //Display results
     bl displayData
 
     //return 0
@@ -52,9 +51,9 @@ getLength:
     ldr r1, =l
     bl scanf
 
-    //Load length
-    ldr r4, =l
-    ldr r4, [r4]
+    //Load length to be returned
+    ldr r0, =l
+    ldr r0, [r0]
 
     pop {pc}
 
@@ -70,8 +69,8 @@ getWidth:
     bl scanf
 
     //Load length
-    ldr r5, =l
-    ldr r5, [r5]
+    ldr r1, =w
+    ldr r1, [r1]
 
 
     pop {pc}
@@ -79,7 +78,8 @@ getWidth:
 getArea:
     push {lr}
 
-    mul r4, r5
+    //Calculate area
+    mul r1, r0, r1 //r1 = l * w
 
 
     pop {pc}
@@ -89,7 +89,8 @@ displayData:
     push {lr}
 
     ldr r0, =outRes
-    mov r1, r4
+    //r1 already has the area
+    bl printf
 
 
     pop {pc}
