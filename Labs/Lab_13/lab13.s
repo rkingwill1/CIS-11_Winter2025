@@ -5,10 +5,10 @@
 .extern divmod
 
 .section .data
-    outLabels: .asciz "F\tC\n"
-    outRes:    .asciz "%d \t%d\n"
 
 .section .rodata
+    outLabels: .asciz "F\tC\n"
+    outRes:    .asciz "%d \t%d\n"
     
 
 .text
