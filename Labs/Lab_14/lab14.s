@@ -17,8 +17,6 @@
     inChar: .asciz "%c"
     inInt:  .asciz "%d"
     wip: .asciz "Work in Progress\n"
-    c: .word 67
-    f: .word 70
 
 .text
 main:

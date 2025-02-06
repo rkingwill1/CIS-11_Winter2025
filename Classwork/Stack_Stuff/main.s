@@ -13,8 +13,8 @@ main:
     str r0, [sp] //Store r0 value (25) into stack
 
     sub sp, #4   //Allocate 4bytes of space
-    mov r0, #16
-    str r0, [sp]
+    mov r0, #16  //Store 16 into r0
+    str r0, [sp] //Store r0 (16) into stack
 
     
 
