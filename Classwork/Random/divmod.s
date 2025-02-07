@@ -20,38 +20,11 @@ r2 = increment from 1
 r3 = decrement from denom
 r4 = denom
 r5 = numerator
-r8 = sign of numerator
-r9 = sign of denominator
-r11 = orig numerator
-r12 = orig denominator
  */
     push {lr}
     push {r4-r12}
     mov r4, r1          //denom = 3;
     mov r5, r0        //numer = 600; 
-
-    //Save the original sign of the determinations
-    mov r11, r0
-    mov r12, r1
-
-    //Get the sign of numberator
-    cmp r0, #0   //
-    movlt r8, #1 //Negative if less than
-    movgt r8, #0 //Positive if greather than
-
-    //Get the sign of denominator
-    cmp r1, #0   //
-    movlt r9, #1 //Negative if less than
-    movgt r9, #0 //Positive if greather than
-
-    //Compute the answer sign
-    eor r10, r8, r9
-    
-    //Absolute value the both of them
-    cmp r0, #0
-    rsblt r0, #0
-    cmp r1, #0
-    rsb r1, #0
 
     //Initialize the working registers with the data
     mov r1, #0          //rDiv = 0;
@@ -89,13 +62,6 @@ endWhile2: //}
     bal while1
 endWhile1: //}
     //Output the results
-
-    //Adjust result to include the sign
-    cmp r10, #1 //If answer should be negative give a negative
-    rsbeq r1, #0 //r1 = 0 - r1
-    //Adjust the remainder sign to match the dividend
-    cmp r8, #0  
-    rsbeq r0, #0 //r0 = 0 - r0
     //move the values around 
     mov r6, r0          //move rmod to safe register
     mov r7, r1          //mov rdiv to safe register
