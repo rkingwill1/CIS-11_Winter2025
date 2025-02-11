@@ -9,8 +9,8 @@
 
 .equ PIN_BUTTON, 18
 .equ PIN_LED,    17
-.equ HIGH,       0
-.equ LOW,        1
+.equ LOW,        0
+.equ HIGH,       1
 .equ INPUT,      0
 .equ OUTPUT,     1
 
@@ -33,7 +33,7 @@ main:
     //Infinite while loop
     while: # {
         //Read the button pin
-        mov r0, PIN_BUTTON
+        mov r0, #PIN_BUTTON
         bl digitalRead
         //Check state of LED pin
         cmp r0, #HIGH //TRUE if LED pin is on

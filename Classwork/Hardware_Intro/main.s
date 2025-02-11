@@ -52,7 +52,7 @@ main:
             //Turn off the pin
             mov r0, #PIN_LED
             mov r1, #LOW
-            bl pinMode
+            bl digitalWrite
             //Toggle bool true
             mov r4, #1
 
