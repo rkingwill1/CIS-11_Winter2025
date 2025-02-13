@@ -9,7 +9,7 @@
 //Sets random seed
 //void initRand()
 initRand: 
-    push {lr}
+    stmdb sp!, {lr}
 
     mov r0, #0
     bl time
@@ -18,20 +18,20 @@ initRand:
     
 
 
-    pop {pc}
+    ldmia sp!, {pc}
 
 //getRand(int modby, int addby)
 //r0 = modby
 //r1 = addby
 getRand:
-    push {r1-r5, lr}
+    stmdb sp!, {r4-r5, lr}
 
     //Move modby and addby to safe registers
     mov r4, r0
     mov r5, r1
 
     bl rand //Gets random value into r0
-    lsr r0, #1 //Make sure there are no negative values
+    lsr r0, #1
 
     //r0/r1
     mov r1, r4 //modby into r1
@@ -43,4 +43,4 @@ getRand:
     //Return rand() % modby + addby
 
 
-    pop {r1-r5, pc}
+    ldmia sp!, {r4-r5, pc}
