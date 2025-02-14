@@ -7,88 +7,87 @@
 .section .data
 
 .section .rodata
+    //Predetermined Code
+    code: .word 'B', 'P', 'W', 'Z'
+
     //Colors that can be in the code
     colors: .word 'R', 'O', 'Y', 'G', 'B', 'P', 'W', 'Z' //Red, Orange, Yellow, Green, Blue, Purple, White, Zlack
     //Strings
-    inPat: .asciz " %c %c %c"
-    inPat2: .asciz " %c"
-    prmpt: .asciz "Enter your guess (4 colors R, O, Y, G, B, P, W, Z)\n"
+    inPat: .asciz " %c"
+    prmpt1: .asciz "-----Mastermind Codebreaker Game-----\n"
+    prmpt2: .asciz "Enter your guess (4 colors R, O, Y, G, B, P, W, Z)\n\n"
     prmptG: .asciz "Guess %d: "
-    outRes: .asciz "%d correct, %d misplaced \n"
-    outWin: .asciz "All colors are correct, you win!\n"
-    outLose: .asciz "Out of guesses, you lose.\n"
+    outRes: .asciz "%d correct, %d misplaced\n\n"
+    outWin: .asciz "\n~~~~~All colors are correct, you win!~~~~~\n\n"
+    outLose: .asciz "\n-----Out of guesses, you lose.-----\n\n"
     outElem: .asciz "%c "
     newline: .asciz "\n"
     debug: .asciz "Debug: %c\n"
     //Code size
-    size: .word 4
-
-    //Predetermined Code
-    code: .word 'B', 'P', 'W', 'Z'
+    size: .word 4    
 
 .section .bss
-    //.align 4
-    //code: .space 16
-    guess: .space 16
-    temp: .space 16
+    guess: .space 16 //Player's guess
+    temp: .space 16  //Temporary storage for copy of code
 
 .text
 main:
     push {lr}
 
-    //Seed random
-    bl initRand
-
-    //Generate random code
-    @ ldr r0, =colors
-    @ ldr r1, =code
-    @ ldr r2, =size
-    @ ldr r2, [r2]
-    @ bl genCode
-
-    //Output code
-    ldr r0, =code
-    ldr r1, =size
-    ldr r1, [r1]
-    bl outArr
-
     //Prompt user with introduction
-    ldr r0, =prmpt
+    ldr r0, =prmpt1
+    bl printf
+    ldr r0, =prmpt2
     bl printf
 
-    //Get user's guess
-    ldr r0, =guess
-    ldr r1, =size
-    ldr r1, [r1]
-    bl getGuess
+    //Game loop (10 guesses)
+    mov r4, #0
+    mFor: # {
+        cmp r4, #10
+        bge mfEnd
 
-    //Check guess
-    ldr r0, =code
-    ldr r1, =size
-    ldr r1, [r1]
-    ldr r2, =guess
-    ldr r3, =temp
-    bl check
+        //Get user's guess
+        ldr r0, =guess
+        ldr r1, =size
+        ldr r1, [r1]
+        add r2, r4, #1
+        bl getGuess
 
-    //Output results
-    mov r2, r1
-    mov r1, r0
-    ldr r0, =outRes
+        //Check guess
+        ldr r0, =code
+        ldr r1, =size
+        ldr r1, [r1]
+        ldr r2, =guess
+        ldr r3, =temp
+        bl check
+
+        //Check if guess is correct
+        cmp r0, #4
+        beq win
+
+        //Output results
+        mov r2, r1
+        mov r1, r0
+        ldr r0, =outRes
+        bl printf
+
+        //Increment counter
+        add r4, #1
+
+        bal mFor
+    # }
+    mfEnd:
+
+    lose:
+    ldr r0, =outLose
     bl printf
+    bal end
 
-    //Output temp
-    ldr r0, =temp
-    ldr r1, =size
-    ldr r1, [r1]
-    bl outArr
-
-    //Output guess
-    ldr r0, =guess
-    ldr r1, =size
-    ldr r1, [r1]
-    bl outArr
+    win:
+    ldr r0, =outWin
+    bl printf
     
-
+    end:
     mov r0, #0
     pop {pc}
 
@@ -133,8 +132,9 @@ genCode:
 
 //r0 = guess[]
 //r1 = size
+//r2 = nGuess
 getGuess:
-    push {r5-r6, lr}
+    push {r4-r6, lr}
 
     //Move params to safe registers
     mov r5, r0 //guess[]
@@ -142,23 +142,30 @@ getGuess:
 
     //Prompt User to enter their guess
     ldr r0, =prmptG
-    mov r1, #1
+    mov r1, r2
     bl printf
-    //Get guess
-    ldr r0, =inPat2 //One
-    mov r1, r5
-    bl scanf
-    ldr r0, =inPat2 //Two
-    add r1, r5, #4
-    bl scanf
-    ldr r0, =inPat2 //Three
-    add r1, r5, #8
-    bl scanf
-    ldr r0, =inPat2 //Four
-    add r1, r5, #12
-    bl scanf
 
-    pop {r5-r6, pc}
+    //Get all four color inputs
+    mov r4, #0
+    ggFor: # {
+        cmp r4, r6
+        bge ggfEnd
+
+        //Get input
+        ldr r0, =inPat
+        mov r1, r5
+        bl scanf
+
+        //Increment counter
+        add r4, #1
+        //Increment array pointer
+        add r5, #4
+
+        bal ggFor
+    # }
+    ggfEnd:
+
+    pop {r4-r6, pc}
     
 
 //r0 = arr[]
